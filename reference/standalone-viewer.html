@@ -1,0 +1,418 @@
+<title>Rosa's Studio IVAR Layouts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: work-table split — option rail + spec sheet on the left, 3D model fills the right; stacks on phones */
+:root{
+  --bg:#f3f1ec; --panel:#fbfaf7; --fg:#22252b; --muted:#6b6f78; --line:#dcd8cf;
+  --accent:#2e4a7d; --accent-soft:#e3e8f2; --ok:#2f7a4f; --ok-soft:#e2f1e8; --warn:#b2452f; --warn-soft:#f6e3de;
+  --canvas:#e9e6df;
+  --f-display:"Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Atkinson Hyperlegible", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#17191d; --panel:#1f2227; --fg:#e8e6e1; --muted:#9a9ea7; --line:#33373e;
+  --accent:#8fa9dd; --accent-soft:#26304a; --ok:#6cc392; --ok-soft:#1d3327; --warn:#ec8a74; --warn-soft:#3b231e; --canvas:#202329; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#17191d; --panel:#1f2227; --fg:#e8e6e1; --muted:#9a9ea7; --line:#33373e;
+  --accent:#8fa9dd; --accent-soft:#26304a; --ok:#6cc392; --ok-soft:#1d3327; --warn:#ec8a74; --warn-soft:#3b231e; --canvas:#202329; color-scheme:dark }
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.app{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:0;height:100%}
+aside{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:20px;display:flex;flex-direction:column;gap:18px;min-width:0}
+h1{font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.15;margin:0;text-wrap:balance}
+.eyebrow{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.intro{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+.opts{display:grid;gap:6px}
+.opt{all:unset;cursor:pointer;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.opt:hover{border-color:var(--accent)}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt .k{font-family:var(--f-mono);font-weight:600;font-size:.8rem;color:var(--accent);padding-top:2px}
+.opt b{font-family:var(--f-display);font-size:1rem;display:block}
+.opt span{font-size:.82rem;color:var(--muted)}
+section h2{font-family:var(--f-display);font-size:1.05rem;margin:0 0 6px}
+.desc{margin:0;font-size:.92rem}
+.checks{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.checks li{display:flex;gap:8px;align-items:baseline;font-size:.86rem}
+.pill{font-family:var(--f-mono);font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.no{background:var(--warn-soft);color:var(--warn)}
+.pill.info{background:var(--accent-soft);color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+td{padding:5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);text-align:right;width:3.5em;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono);font-size:.8rem}
+.note{font-size:.8rem;color:var(--muted);margin:0}
+main{position:relative;min-width:0;background:var(--canvas)}
+#view{position:absolute;inset:0}
+#view canvas{display:block;width:100%;height:100%;touch-action:none}
+.toolbar{position:absolute;top:max(12px,env(safe-area-inset-top,0px));left:12px;right:max(12px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;gap:6px;pointer-events:none}
+.toolbar button,.toolbar label{pointer-events:auto;font-family:var(--f-mono);font-size:.74rem;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.toolbar button:hover,.toolbar label:hover{border-color:var(--accent)}
+.toolbar button:focus-visible{outline:2px solid var(--accent)}
+.toolbar .sp{flex:1}
+.legend{position:absolute;left:12px;bottom:max(12px,env(safe-area-inset-bottom,0px));background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:.75rem;display:grid;gap:4px;max-width:calc(100% - 24px)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr;grid-template-rows:62vh auto;height:auto}
+  main{order:-1;height:62vh}
+  aside{border-right:0;border-top:1px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .legend{display:none}
+}
+</style>
+
+<div class="app">
+  <aside>
+    <header>
+      <div class="eyebrow">Rosa's Shed · V2 · textile studio</div>
+      <h1>IVAR at the wall 1 end</h1>
+      <p class="intro">Room is <span class="mono">19′-3″ × 11′-1½″</span>, <span class="mono">7′-9″</span> walls. Runs along walls 2 and 4 stop short of the door and window. Drag to orbit, scroll or pinch to zoom.</p>
+    </header>
+    <nav class="opts" id="opts" aria-label="Layout options"></nav>
+    <section>
+      <h2 id="optTitle"></h2>
+      <p class="desc" id="optDesc"></p>
+    </section>
+    <section>
+      <div class="eyebrow" style="margin-bottom:6px">Clearance checks</div>
+      <ul class="checks" id="checks"></ul>
+    </section>
+    <section>
+      <div class="eyebrow" style="margin-bottom:4px">Runs</div>
+      <table id="runs"></table>
+    </section>
+    <section>
+      <div class="eyebrow" style="margin-bottom:4px">IVAR parts</div>
+      <table id="parts"></table>
+      <p class="note" style="margin-top:8px">Counts are per IKEA's US catalog sizes: shelves 33″ or 17″ wide, side units 11¾″ or 19⅝″ deep and 49″, 70½″ or 89″ tall. Add one OBSERVATÖR cross-brace per run and anchor every run to the wall framing.</p>
+    </section>
+    <p class="note">Measurements come from the SketchUp model. Walls 2 and 4 are flipped end-for-end from the SketchUp file: wall 4's door now sits 4′-4⅜″ from wall 1, and wall 2's window sits 3′-3¾″ from wall 1 with its door toward wall 3.</p>
+  </aside>
+  <main>
+    <div id="view"></div>
+    <div class="toolbar">
+      <button id="vCorner" type="button">Corner view</button>
+      <button id="vFront" type="button">Facing wall 1</button>
+      <button id="vPlan" type="button">Plan</button>
+      <span class="sp"></span>
+      <label for="tContents"><input type="checkbox" id="tContents" checked> Wool &amp; tools</label>
+      <label for="tLimits"><input type="checkbox" id="tLimits" checked> Limit lines</label>
+    </div>
+    <div class="legend">
+      <div><i style="background:#d8b483"></i>IVAR pine</div>
+      <div><i style="background:#c9503a"></i>Limit: don't build past this line</div>
+      <div><i style="background:#7fb3d9"></i>Window</div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ---------- Room (inches) from the SketchUp model ----------
+// x runs along walls 2/4 starting at wall 1 (x=0) toward wall 3 (x=231)
+// z runs along wall 1 from wall 2 (z=0) to wall 4 (z=133.5); y is up.
+const ROOM={L:231,W:133.5,H:93,T:3.5};
+const OPEN={
+  // z=0 side = WALL 4 (flipped end-for-end from the SketchUp file per Rosa's notes): door now near wall 1
+  w2:[{type:'door',x0:52.31,x1:100.45,y0:0,y1:92},{type:'window',x0:115.31,x1:145.31,y0:24.26,y1:61.55}],
+  // z=133.5 side = WALL 2 (flipped): window near wall 1, door toward wall 3
+  w4:[{type:'window',x0:39.71,x1:73.26,y0:30.08,y1:78.55},{type:'door',x0:140.0,x1:188.0,y0:0,y1:92}],
+  w3:[{type:'window',z0:53.52,z1:83.52,y0:29.69,y1:66.98}]
+};
+const LIMIT_W4=39.71, LIMIT_W2=52.31; // W4 = z=133.5 side (wall 2 window), W2 = z=0 side (wall 4 door)
+
+// ---------- IVAR catalog ----------
+const D12=11.75, D20=19.625, POST=1.5, SPAN={W:32,N:16};
+const secW=k=>SPAN[k]+POST;
+const runLen=secs=>POST+secs.reduce((a,s)=>a+secW(s.w),0);
+
+// ---------- helpers for section contents ----------
+const shelvesFor=H=>H>=89?[3,20,37,54,71,87]:H>=70?[3,20,37,54,69]:[3,25,47];
+function S(w,H,opt={}){ // standard section
+  let ys=opt.ys||shelvesFor(H); const items=[];
+  if(opt.cab){items.push({t:'cab'});ys=ys.filter(y=>y>34);items.push({t:'shelf',y:34});}
+  if(opt.drawers){opt.drawers.forEach(y=>items.push({t:'drawer',y}));ys=ys.filter(y=>!opt.drawers.some(d=>y>=d-1&&y<d+8));}
+  if(opt.table){items.push({t:'table',y:opt.table});ys=ys.filter(y=>y>opt.table+20||y<4);}
+  ys.forEach((y,i)=>items.push({t:'shelf',y,fill:(opt.fill||['fabric','bins','fabric','bolts','fabric','bins'])[i%6]}));
+  return {w,items};
+}
+
+// ---------- the layouts ----------
+const LAYOUTS=[
+ {key:'A',name:'Wall 1 library',tag:'Tall run on wall 1 only, side walls left clear',
+  desc:'Four sections across wall 1 at full 89″ height: a cabinet base for notions, a fold-down work table for winding and blocking, a drawer bay for patterns and a narrow bay for needles, hooks and spindles. Walls 2 and 4 stay open for a pegboard of tools or a skein-drying rack.',
+  runs:[{wall:'1',a0:7,depth:D12,H:89,secs:[S('W',89,{cab:true}),S('W',89,{table:30}),S('W',89,{drawers:[3,11,19]}),S('N',89,{fill:['bins']})]}]},
+ {key:'B',name:'Corner L',tag:'Wall 1 + wall 4, stops before the door',
+  desc:'Three tall sections on wall 1 wrap the corner into one 70½″ section along wall 4 with drawers. The return ends 5½″ before the door opening, so the doorway stays clear.',
+  runs:[{wall:'1',a0:0,depth:D12,H:89,secs:[S('W',89,{fill:['bolts','bolts','fabric','fabric','bins','bins']}),S('W',89,{cab:true}),S('W',89,{table:30})]},
+        {wall:'2',a0:D12,depth:D12,H:70.5,secs:[S('W',70.5,{drawers:[3,11]})]}]},
+ {key:'C',name:'U-wrap',tag:'All three walls, shallow 11¾″ depth',
+  desc:'A full-width run on wall 1 with returns on both side walls. The wall 4 return is one wide bay that stops 5½″ before the door, and the wall 2 return is a narrow 17″ bay that stops 9″ before the window.',
+  runs:[{wall:'1',a0:7,depth:D12,H:89,secs:[S('W',89,{cab:true}),S('W',89,{table:30}),S('W',89,{cab:true}),S('N',89,{fill:['bins']})]},
+        {wall:'2',a0:D12,depth:D12,H:89,secs:[S('W',89,{drawers:[3,11,19],fill:['bolts','fabric','fabric','bolts','bins','bins']})]},
+        {wall:'4',a0:D12,depth:D12,H:89,secs:[S('N',89,{fill:['bins','bins','fabric','fabric','bins','bins']})]}]},
+ {key:'D',name:'Fabric stacks',tag:'Perpendicular aisles off wall 1',
+  desc:'Shelving runs perpendicular to wall 1: one along each side wall plus a double-sided 19⅝″ deep peninsula down the middle at 49″ so it reads as a landing surface. Aisles are 45″ wide on both sides, and every run stops short of the window on wall 2 and the door on wall 4.',
+  runs:[{wall:'2',a0:0,depth:D12,H:70.5,secs:[S('W',70.5,{fill:['bolts','fabric','fabric','bins','bins']})]},
+        {wall:'pen',a0:0,depth:D20,H:49,secs:[S('W',49,{fill:['bins','fabric','fabric']})]},
+        {wall:'4',a0:0,depth:D12,H:70.5,secs:[S('W',70.5,{fill:['bins','fabric','bolts','fabric','bins']})]}]},
+ {key:'E',name:'Max storage, deep',tag:'19⅝″ deep everywhere it fits',
+  desc:'Deep side units hold raw fleece, roving baskets and a big cone stash. Wall 1 gets four tall sections, and each side wall gets one narrow bay: wall 4 stops 13¾″ before the door, wall 2 stops 1″ before the window trim. Loses about 8″ of floor depth versus the shallow options.',
+  runs:[{wall:'1',a0:7,depth:D20,H:89,secs:[S('W',89,{fill:['bolts','bolts','bolts','fabric','bins','bins']}),S('W',89,{cab:true}),S('W',89,{drawers:[3,11,19]}),S('N',89,{fill:['bins']})]},
+        {wall:'2',a0:D20,depth:D20,H:89,secs:[S('N',89,{drawers:[3,11],fill:['bolts','fabric','bins','bins']})]},
+        {wall:'4',a0:D20,depth:D20,H:89,secs:[S('N',89,{fill:['bins','fabric','fabric','bins','bins','bins']})]}]},
+ {key:'F',name:'Sewing nook',tag:'Desk bay in the middle, low run on wall 4',
+  desc:'Wall 1 is tall at both ends with a desk-height folding table in the middle bay for the machine. A 49″ bay on wall 4 gives a landing surface for blocking pieces and sorting skeins, and stops before the door.',
+  runs:[{wall:'1',a0:15,depth:D12,H:89,secs:[S('W',89,{fill:['bins','bins','fabric','fabric','bolts','bolts']}),S('W',89,{table:29,ys:[3,52,71,87]}),S('W',89,{cab:true})]},
+        {wall:'2',a0:D12,depth:D12,H:49,secs:[S('W',49,{drawers:[3,11]})]}]}
+];
+
+// ---------- formatting ----------
+function ftin(v){ const s=v<0?'-':''; v=Math.abs(v); let ft=Math.floor(v/12+1e-9), inch=v-ft*12; let e=Math.round(inch*8);
+  if(e===96){ft++;e=0} const whole=Math.floor(e/8), fr=e%8;
+  const fracs={1:'⅛',2:'¼',3:'⅜',4:'½',5:'⅝',6:'¾',7:'⅞'};
+  const ins=(whole||!fr?whole:'')+(fr?fracs[fr]:'');
+  return s+(ft?ft+'′-':'')+ins+'″'; }
+
+// run geometry in world coords: footprint along its wall
+function runExtent(r){ const L=runLen(r.secs);
+  if(r.wall==='1') return {L,along:[r.a0,r.a0+L]};
+  return {L,along:[r.a0,r.a0+L]}; }
+
+// ---------- three.js scene ----------
+const host=document.getElementById('view');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+host.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(45,1,1,3000);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.495;
+
+function themeBg(){ return getComputedStyle(document.documentElement).getPropertyValue('--canvas').trim()||'#e9e6df'; }
+scene.background=new THREE.Color(themeBg());
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{scene.background=new THREE.Color(themeBg())});
+
+scene.add(new THREE.HemisphereLight(0xffffff,0xb8b2a6,0.75));
+const sun=new THREE.DirectionalLight(0xfff4e0,0.7); sun.position.set(260,320,-120); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-200,right:200,top:200,bottom:-200,near:10,far:900});
+sun.target.position.set(100,0,66); scene.add(sun,sun.target);
+const fill=new THREE.DirectionalLight(0xdfe8ff,0.25); fill.position.set(200,150,300); scene.add(fill);
+
+// pine texture
+function woodTex(){ const c=document.createElement('canvas'); c.width=256;c.height=256; const g=c.getContext('2d');
+  g.fillStyle='#dcbb8c'; g.fillRect(0,0,256,256);
+  for(let i=0;i<70;i++){ const y=Math.random()*256; g.strokeStyle=`rgba(${150+Math.random()*40|0},${100+Math.random()*30|0},${55+Math.random()*20|0},${0.08+Math.random()*0.15})`;
+    g.lineWidth=0.6+Math.random()*1.8; g.beginPath(); g.moveTo(0,y); for(let x=0;x<=256;x+=16) g.lineTo(x,y+Math.sin(x/40+i)*2.5); g.stroke(); }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.encoding=THREE.sRGBEncoding; return t; }
+const WT=woodTex();
+const M={
+  pine:new THREE.MeshStandardMaterial({map:WT,roughness:0.75,color:0xffffff}),
+  pineDark:new THREE.MeshStandardMaterial({map:WT,roughness:0.7,color:0xe6d2b5}),
+  wall:new THREE.MeshStandardMaterial({color:0xeeece6,roughness:0.95}),
+  wallEdge:new THREE.MeshStandardMaterial({color:0xc9c5bb,roughness:0.9}),
+  floor:new THREE.MeshStandardMaterial({color:0xcdbfa6,roughness:0.9}),
+  glass:new THREE.MeshStandardMaterial({color:0x7fb3d9,transparent:true,opacity:0.45,roughness:0.1}),
+  door:new THREE.MeshStandardMaterial({color:0x8e9aa6,roughness:0.6}),
+  limit:new THREE.MeshBasicMaterial({color:0xc9503a,transparent:true,opacity:0.13,side:THREE.DoubleSide,depthWrite:false}),
+  limitLine:new THREE.MeshBasicMaterial({color:0xc9503a}),
+  knob:new THREE.MeshStandardMaterial({color:0x8a6b45,roughness:0.5})
+};
+function box(w,h,d,mat,x,y,z,shadow=true){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); m.position.set(x+w/2,y+h/2,z+d/2); if(shadow){m.castShadow=true;m.receiveShadow=true;} return m; }
+
+// ---------- labels ----------
+function label(text,opts={}){ const c=document.createElement('canvas'); const g=c.getContext('2d'); const fs=44;
+  g.font=`700 ${fs}px "Familjen Grotesk", Arial, sans-serif`; const w=Math.ceil(g.measureText(text).width)+36; c.width=w; c.height=fs+28;
+  g.font=`700 ${fs}px "Familjen Grotesk", Arial, sans-serif`;
+  g.fillStyle=opts.bg||'rgba(34,37,43,0.86)'; const r=12; g.beginPath(); g.moveTo(r,0);g.arcTo(w,0,w,c.height,r);g.arcTo(w,c.height,0,c.height,r);g.arcTo(0,c.height,0,0,r);g.arcTo(0,0,w,0,r);g.fill();
+  g.fillStyle=opts.fg||'#fff'; g.textBaseline='middle'; g.fillText(text,18,c.height/2+2);
+  const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true})); const k=(opts.size||6)/c.height; s.scale.set(w*k,c.height*k,1); s.renderOrder=10; return s; }
+
+// ---------- room ----------
+const room=new THREE.Group(); scene.add(room);
+const {L,W,H,T}=ROOM;
+room.add(box(L+2*T,1,W+2*T,M.floor,-T,-1,-T));
+// wall built along x with openings: z0 is inner face position, out = direction outward (-1 or +1)
+function wallX(zInner,out,openings){ const zz=out<0?zInner-T:zInner; const segs=[]; let cur=-T;
+  const ops=[...openings].sort((a,b)=>a.x0-b.x0);
+  ops.forEach(o=>{ segs.push([cur,o.x0,0,H]); segs.push([o.x0,o.x1,0,o.y0]); segs.push([o.x0,o.x1,o.y1,H]); cur=o.x1; });
+  segs.push([cur,L,0,H]);
+  segs.forEach(([a,b,y0,y1])=>{ if(b-a>0.01&&y1-y0>0.01) room.add(box(b-a,y1-y0,T,M.wall,a,y0,zz)); });
+  ops.forEach(o=>{ const zc=out<0?zInner-T/2:zInner+T/2;
+    if(o.type==='window'){ const g=box(o.x1-o.x0,o.y1-o.y0,0.4,M.glass,o.x0,o.y0,zc-0.2,false); room.add(g);
+      room.add(box(o.x1-o.x0,1,T+1,M.wallEdge,o.x0,o.y0-1,zz-0.5)); }
+    else { room.add(box(o.x1-o.x0,o.y1,1.5,M.door,o.x0,0,out<0?zInner-T:zInner+T-1.5)); }
+  });
+}
+wallX(0,-1,OPEN.w2);       // wall 2
+wallX(W,+1,OPEN.w4);       // wall 4
+room.add(box(T,H,W+2*T,M.wall,-T,0,-T)); // wall 1 (no openings)
+// wall 3 shown as a low curb so the far end reads
+room.add(box(T,H,W+2*T,M.wall,L,0,-T)); // wall 3, blank
+
+// wall labels
+const lab=(t,x,y,z,o)=>{const s=label(t,o);s.position.set(x,y,z);room.add(s);};
+lab('Wall 1',-2,H+10,W/2);
+lab('Wall 4',60,H+8,-4);
+lab('Wall 2',60,H+8,W+4);
+lab('Wall 3',L,H+8,W/2);
+lab('Door',76.4,H-6,-2,{size:4.5,bg:'rgba(46,74,125,.9)'});
+lab('Window',56.5,82,W+2,{size:4.5,bg:'rgba(46,74,125,.9)'});
+
+// limit planes
+const limits=new THREE.Group(); scene.add(limits);
+function limitAt(x,zA,zB,text,tz){ const p=new THREE.Mesh(new THREE.PlaneGeometry(Math.abs(zB-zA),H),M.limit); p.rotation.y=Math.PI/2; p.position.set(x,H/2,(zA+zB)/2); limits.add(p);
+  limits.add(box(1.2,0.3,Math.abs(zB-zA),M.limitLine,x-0.6,0.05,Math.min(zA,zB),false));
+  const s=label(text,{size:4.5,bg:'rgba(201,80,58,.92)'}); s.position.set(x,H+2,tz); limits.add(s); }
+limitAt(LIMIT_W4,W,W-30,'Window line '+ftin(LIMIT_W4),W-10);
+limitAt(LIMIT_W2,0,30,'Door line '+ftin(LIMIT_W2),10);
+
+// ---------- IVAR builder ----------
+const layoutGroup=new THREE.Group(); scene.add(layoutGroup);
+const contentsGroups=[];
+let seed=1; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+const FAB=[0x2e4a7d,0xc75b3d,0xe2b33c,0x6f8f5a,0xa34d6d,0xd9d2c3,0x3f7f86,0xe48b6a,0x58467a,0xf0e6d2];
+const fabMat={}; const fm=c=>fabMat[c]||(fabMat[c]=new THREE.MeshStandardMaterial({color:c,roughness:0.95}));
+const binMat=new THREE.MeshStandardMaterial({color:0xb9b3a6,roughness:0.9});
+
+const YARN=[0x8a3b3b,0xc9763e,0xd9b44a,0x6f8a4e,0x3f6f7a,0x2e4a7d,0x6b4f7d,0xb85c7a,0xe9e2d0,0xa89a86,0x5a4a3c,0xd8cfc0];
+const wicker=new THREE.MeshStandardMaterial({color:0xb08a58,roughness:1});
+const glass=new THREE.MeshStandardMaterial({color:0xcfe3ea,transparent:true,opacity:0.35,roughness:0.05});
+const steel=new THREE.MeshStandardMaterial({color:0x9aa0a6,metalness:0.6,roughness:0.35});
+const yc=()=>YARN[rnd()*YARN.length|0];
+function mesh(geo,mat,x,y,z){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;return m;}
+function fillShelf(g,x0,span,y,D,kind,cg){
+  const top=y+0.9;
+  if(kind==='bins'&&span<20) kind='tools';
+  if(kind==='fabric'){ // twisted skeins of wool lying front-to-back, stacked
+    const r=1.5, len=Math.min(10,D-2); let n=Math.floor((span-1)/(2*r+0.3));
+    for(let layer=0;layer<3;layer++){ const cnt=n-layer; const off=x0+(span-cnt*(2*r+0.3))/2+r;
+      for(let i=0;i<cnt;i++){ const col=yc(); const sk=mesh(new THREE.CylinderGeometry(r,r,len,10),fm(col),off+i*(2*r+0.3)+layer*(r+0.15)*0,top+r+layer*(2*r-0.6),D/2);
+        sk.rotation.x=Math.PI/2; sk.position.x+=layer*(r+0.15); cg.add(sk);
+        const tw=mesh(new THREE.TorusGeometry(r*0.55,r*0.35,6,10),fm(col),sk.position.x,sk.position.y,D/2+len/2-0.3); cg.add(tw); }
+      if(cnt<=1)break; } }
+  else if(kind==='bolts'){ // yarn cones
+    let x=x0+2.6; while(x<x0+span-2.4){ const col=yc(); cg.add(mesh(new THREE.CylinderGeometry(1.1,2.4,7.5,14),fm(col),x,top+3.75,D*0.35));
+      cg.add(mesh(new THREE.CylinderGeometry(0.45,0.7,8.2,8),fm(0xe8dcc4),x,top+4.1,D*0.35));
+      if(D>14){ cg.add(mesh(new THREE.CylinderGeometry(1.1,2.4,7.5,14),fm(yc()),x,top+3.75,D*0.75)); }
+      x+=5.2; } }
+  else if(kind==='bins'){ // wicker baskets with yarn balls and roving
+    const bw=span>20?(span-2.4)/2:span-1.6; let x=x0+0.8;
+    while(x+bw<=x0+span-0.4){ const bd=D-2.5, bh=7;
+      cg.add(box(bw,0.5,bd,wicker,x,top,1.2)); cg.add(box(bw,bh,0.5,wicker,x,top,1.2)); cg.add(box(bw,bh,0.5,wicker,x,top,1.2+bd-0.5));
+      cg.add(box(0.5,bh,bd,wicker,x,top,1.2)); cg.add(box(0.5,bh,bd,wicker,x+bw-0.5,top,1.2));
+      const nb=Math.max(2,Math.floor(bw/4.6));
+      for(let i=0;i<nb;i++){ const rr=2+rnd()*0.5; const roving=rnd()<0.3;
+        const b=mesh(new THREE.SphereGeometry(rr,12,10),fm(roving?(rnd()<0.5?0xf1ece2:0x9c9389):yc()),x+1.2+rr+i*(bw-2.4-2*rr)/Math.max(1,nb-1),top+bh-0.6+rnd()*0.8,1.2+bd*(0.35+rnd()*0.3));
+        if(roving){b.scale.set(1.5,0.8,1.1);} cg.add(b); }
+      x+=bw+0.8; } }
+  else if(kind==='tools'){ // jars of needles & hooks, drop spindle, shears
+    const cx=x0+span/2, zc=D/2;
+    cg.add(mesh(new THREE.CylinderGeometry(2.2,2.2,6,16),glass,cx-3.6,top+3,zc));
+    for(let i=0;i<7;i++){ const n=mesh(new THREE.CylinderGeometry(0.15,0.15,12,6),fm(i%2?0xc9a46a:0x7a5a3a),cx-3.6+(rnd()-0.5)*2.5,top+6,zc+(rnd()-0.5)*2.5); n.rotation.z=(rnd()-0.5)*0.35; cg.add(n); }
+    cg.add(mesh(new THREE.CylinderGeometry(2,2,0.6,20),M.pineDark,cx+3.2,top+5,zc)); // spindle whorl
+    cg.add(mesh(new THREE.CylinderGeometry(0.25,0.25,10,6),M.pine,cx+3.2,top+5,zc));
+    cg.add(mesh(new THREE.SphereGeometry(1.6,12,10),fm(yc()),cx+3.2,top+2,zc));
+  }
+}
+function buildRun(r){
+  const len=runLen(r.secs), D=r.depth, Hh=r.H;
+  const g=new THREE.Group(); const cg=new THREE.Group(); g.add(cg); contentsGroups.push(cg);
+  // local frame: x along run, z = depth (0 back, D front), y up
+  const sideUnit=(x)=>{ g.add(box(POST,Hh,1.5,M.pine,x,0,0)); g.add(box(POST,Hh,1.5,M.pine,x,0,D-1.5));
+    const n=Math.max(2,Math.round(Hh/22)); for(let i=0;i<n;i++){ const yy=i===0?2:(i===n-1?Hh-3:2+i*(Hh-5)/(n-1)); g.add(box(POST,1,D-3,M.pineDark,x,yy,1.5)); } };
+  let x=0; sideUnit(0);
+  r.secs.forEach(sec=>{ const span=SPAN[sec.w], x0=x+POST;
+    sec.items.forEach(it=>{
+      if(it.t==='shelf'){ g.add(box(span,0.9,D-0.4,M.pine,x0,it.y,0.2)); if(it.fill) fillShelf(g,x0,span,it.y,D,it.fill,cg); }
+      if(it.t==='cab'){ g.add(box(span,33,D-0.6,M.pineDark,x0,0.5,0.3));
+        const dw=span/2-0.3; [x0+0.2,x0+span/2+0.1].forEach((dx,i)=>{ g.add(box(dw,31.5,0.75,M.pine,dx,1.2,D-0.8)); g.add(box(0.8,3,0.8,M.knob,i?dx+1.5:dx+dw-2.3,24,D)); }); }
+      if(it.t==='drawer'){ g.add(box(span,7.1,D-0.6,M.pineDark,x0,it.y,0.3)); g.add(box(span-0.4,6.6,0.75,M.pine,x0+0.2,it.y+0.25,D-0.8)); g.add(box(4,0.9,0.9,M.knob,x0+span/2-2,it.y+4.4,D)); }
+      if(it.t==='table'){ const ext=35.875; g.add(box(span,1,ext,M.pine,x0,it.y,0)); g.add(box(1.2,it.y,1.2,M.pineDark,x0+1,0,ext-2.2)); g.add(box(1.2,it.y,1.2,M.pineDark,x0+span-2.2,0,ext-2.2));
+        cg.add(box(12,0.6,9,fm(0xd9cdb6),x0+span/2-13,it.y+1,D+3)); cg.add(mesh(new THREE.SphereGeometry(2.4,14,12),fm(0x8a3b3b),x0+span/2+6,it.y+3.4,D+8)); cg.add(box(0.8,0.4,7,steel,x0+span/2-3,it.y+1,D+14)); cg.add(box(0.8,0.4,7,steel,x0+span/2-2,it.y+1.4,D+14)); }
+    });
+    x+=SPAN[sec.w]+POST; sideUnit(x-POST);
+  });
+  if(r.wall==='pen'){ // double-sided: mirror contents to the back half visually by duplicating front-facing items on the back
+    const m=g.clone(); m.scale.z=-1; m.position.z=D; // not used; keep single model but deep shelves read from both sides
+  }
+  // place in world
+  const len2=len, rot=new THREE.Group(); rot.add(g);
+  if(r.wall==='1'){ rot.position.set(0,0,r.a0+len2); rot.rotation.y=Math.PI/2; }     // u = -z, n = +x
+  if(r.wall==='2'){ rot.position.set(r.a0,0,0); }                                    // u = +x, n = +z
+  if(r.wall==='4'){ rot.position.set(r.a0+len2,0,W); rot.rotation.y=Math.PI; }        // u = -x, n = -z
+  if(r.wall==='pen'){ rot.position.set(r.a0,0,W/2-D/2); }
+  return rot;
+}
+
+// ---------- checks & parts ----------
+function analyze(lay){
+  const checks=[], runs=[], parts={};
+  const add=(k,n=1)=>parts[k]=(parts[k]||0)+n;
+  const dd=d=>d===D12?'11¾″':'19⅝″', hh=h=>h===89?'89″':h===70.5?'70½″':'49″';
+  lay.runs.forEach(r=>{ const len=runLen(r.secs);
+    const name=r.wall==='pen'?'Peninsula':'Wall '+({'2':'4','4':'2'}[r.wall]||r.wall);
+    runs.push([name, `${r.secs.length} section${r.secs.length>1?'s':''} · ${ftin(len)} long · ${dd(r.depth)} deep · ${hh(r.H)} tall`]);
+    add(`Side unit ${dd(r.depth)} × ${hh(r.H)}`, r.secs.length+1);
+    r.secs.forEach(s=>s.items.forEach(it=>{ const w=s.w==='W'?'33″':'17″';
+      if(it.t==='shelf') add(`Shelf ${w} × ${dd(r.depth)}`);
+      if(it.t==='cab') add(`Cabinet with doors ${dd(r.depth)} deep`);
+      if(it.t==='drawer') add(`Drawer ${dd(r.depth)} deep`);
+      if(it.t==='table') add('Folding table 31½″');
+    }));
+    add('OBSERVATÖR cross-brace');
+    if(r.wall==='2'){ const end=r.a0+len; checks.push([end<=LIMIT_W2, `Wall 4 run ends at ${ftin(end)} from wall 1, ${ftin(LIMIT_W2-end)} before the door opening`]); }
+    if(r.wall==='4'){ const end=r.a0+len; checks.push([end<=LIMIT_W4, `Wall 2 run ends at ${ftin(end)} from wall 1, ${ftin(LIMIT_W4-end)} before the window`]); }
+    if(r.wall==='pen'){ const end=r.a0+len; checks.push([end<=Math.min(LIMIT_W4,LIMIT_W2), `Peninsula projects ${ftin(end)} into the room, short of both limit lines`]);
+      const g1=W/2-r.depth/2-D12, g2=g1; checks.push(['info',`Aisles either side: ${ftin(g1)} wide`]); }
+    if(r.wall==='1'){ checks.push([r.a0+len<=W, `Wall 1 run is ${ftin(len)} of the ${ftin(W)} wall`]); }
+  });
+  if(lay.runs.some(r=>r.secs.some(s=>s.items.some(i=>i.t==='table')))) checks.push(['info','Folding table opens 24″ past the shelf front at ~30″ high']);
+  return {checks,runs,parts};
+}
+
+// ---------- UI ----------
+const optsEl=document.getElementById('opts');
+LAYOUTS.forEach((l,i)=>{ const b=document.createElement('button'); b.className='opt'; b.type='button'; b.id='opt-'+l.key;
+  b.innerHTML=`<span class="k">${l.key}</span><span style="color:inherit"><b>${l.name}</b><span>${l.tag}</span></span>`;
+  b.addEventListener('click',()=>select(i)); optsEl.appendChild(b); });
+
+function select(i){
+  const lay=LAYOUTS[i];
+  [...optsEl.children].forEach((b,j)=>b.setAttribute('aria-pressed',j===i?'true':'false'));
+  while(layoutGroup.children.length) layoutGroup.remove(layoutGroup.children[0]);
+  contentsGroups.length=0; seed=7+i*13;
+  lay.runs.forEach(r=>layoutGroup.add(buildRun(r)));
+  contentsGroups.forEach(g=>g.visible=document.getElementById('tContents').checked);
+  document.getElementById('optTitle').textContent=`${lay.key}. ${lay.name}`;
+  document.getElementById('optDesc').textContent=lay.desc;
+  const a=analyze(lay);
+  document.getElementById('checks').innerHTML=a.checks.map(([ok,t])=>`<li><span class="pill ${ok==='info'?'info':ok?'ok':'no'}">${ok==='info'?'NOTE':ok?'FITS':'CONFLICT'}</span><span>${t}</span></li>`).join('');
+  document.getElementById('runs').innerHTML=a.runs.map(([n,t])=>`<tr><td style="width:6.5em"><b>${n}</b></td><td class="mono">${t}</td></tr>`).join('');
+  document.getElementById('parts').innerHTML=Object.entries(a.parts).map(([k,n])=>`<tr><td>${k}</td><td class="n">${n}</td></tr>`).join('');
+  try{localStorage.setItem('ivar-opt',String(i))}catch(e){}
+}
+
+function view(kind){
+  const t={corner:[[245,200,92],[30,28,66]],front:[[205,55,66.75],[0,42,66.75]],plan:[[88,390,67.5],[88,0,66.75]]}[kind];
+  camera.position.set(...t[0]); controls.target.set(...t[1]); controls.update();
+}
+document.getElementById('vCorner').onclick=()=>view('corner');
+document.getElementById('vFront').onclick=()=>view('front');
+document.getElementById('vPlan').onclick=()=>view('plan');
+document.getElementById('tContents').onchange=e=>contentsGroups.forEach(g=>g.visible=e.target.checked);
+document.getElementById('tLimits').onchange=e=>limits.visible=e.target.checked;
+
+function resize(){ const w=host.clientWidth,h=host.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/Math.max(h,1); camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(host); resize();
+let start=0; try{ const s=+localStorage.getItem('ivar-opt'); if(s>=0&&s<LAYOUTS.length) start=s; }catch(e){}
+select(start); view('corner');
+(function loop(){ controls.update(); renderer.render(scene,camera); requestAnimationFrame(loop); })();
+</script>

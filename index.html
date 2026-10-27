@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Rosa's Studio IVAR Layouts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+</head>
+<body>
+<div class="app">
+  <aside>
+    <header>
+      <div class="eyebrow">Rosa's Shed · V2 · textile studio</div>
+      <h1>IVAR at the wall 1 end</h1>
+      <p class="intro">Room is <span class="mono">19′-3″ × 11′-1½″</span>, <span class="mono">7′-9″</span> walls. Runs along walls 2 and 4 stop short of the first window or door. Drag to orbit, scroll or pinch to zoom.</p>
+    </header>
+    <nav class="opts" id="opts" aria-label="Layout options"></nav>
+    <section>
+      <h2 id="optTitle"></h2>
+      <p class="desc" id="optDesc"></p>
+    </section>
+    <section>
+      <div class="eyebrow">Clearance checks</div>
+      <ul class="checks" id="checks"></ul>
+    </section>
+    <section>
+      <div class="eyebrow">Runs</div>
+      <table id="runs"></table>
+    </section>
+    <section>
+      <div class="eyebrow">IVAR parts</div>
+      <table id="parts"></table>
+      <p class="note">Counts use IKEA's US catalog sizes: shelves 33″ or 17″ wide, side units 11¾″ or 19⅝″ deep and 49″, 70½″ or 89″ tall. Add one OBSERVATÖR cross-brace per run and anchor every run to the wall framing.</p>
+    </section>
+  </aside>
+  <main>
+    <div id="view"></div>
+    <div class="toolbar">
+      <button id="vCorner" type="button">Corner view</button>
+      <button id="vFront" type="button">Facing wall 1</button>
+      <button id="vPlan" type="button">Plan</button>
+      <span class="sp"></span>
+      <label for="tContents"><input type="checkbox" id="tContents" checked> Wool &amp; tools</label>
+      <label for="tLimits"><input type="checkbox" id="tLimits" checked> Limit lines</label>
+    </div>
+    <div class="legend">
+      <div><i style="background:#d8b483"></i>IVAR pine</div>
+      <div><i style="background:#c9503a"></i>Limit: don't build past this line</div>
+      <div><i style="background:#7fb3d9"></i>Window</div>
+    </div>
+  </main>
+</div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
